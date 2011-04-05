@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- This project masks all SSN numbers in all log files under a parent directory.
+     It assumes that a log file name has a .log in it.
+-->
+<project name="MaskSSNsInLogs" basedir="." default="main">
+  
+  <!-- Whether or not masking operation should preserve last modified date of log files  -->
+  <property name="doPreserveLastModifiedDate" value="true" />
+  
+  <!-- Parent directory for log files --> 
+  <property name="logsDir" location="logs" /> 
+   
+  <!-- SSN pattern (xxxxxxxxx/xxx-xx-xxxx/xxx xx xxxx) -->  
+  <property name="ssnPattern" value="\d{9}|\d{3}[- ]\d{2}[- ]\d{4}" />
+   
+  <!-- Mask SSN with value --> 
+  <property name="maskedSSN" value="*********" />
+  
+  <!-- Replaces all expressions that match SSN Pattern in all log files with a Mask -->
+  <target name="main">
+     <replaceregexp flags="g" preserveLastModified="${doPreserveLastModifiedDate}">
+          <regexp pattern="${ssnPattern}" />
+	      <substitution expression="${maskedSSN}" />
+		  <fileset dir="${logsDir}">
+			<include name="**/*.log*" />
+		  </fileset>
+	  </replaceregexp> 
+  </target>  
+  
+</project>
